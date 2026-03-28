@@ -1,0 +1,340 @@
+#:kivy 2.3.1
+<MyScreenManager>:
+    IntroScreen:
+        name: 'intro_screen'
+    MainScreen:
+        name: 'main_screen'
+
+############################ INTRO SCREEN #######################################
+<IntroScreen>:
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1  # white background for ScreenTwo
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    FloatLayout:
+        Label:
+            text: 'Raffle Numbers'
+            bold: True
+            font_size: 40  # Set font size to 40 pixels
+            color: 0, 0, 0, 1  # Solid black text
+            size_hint: (0.1, 0.1)
+            pos_hint: {'center_x':0.5, 'center_y':0.9}
+        
+        TextInput:
+            id: start_number
+            write_tab:False
+            canvas.before:
+                # Set the color of the outline (RGBA values)
+                Color:
+                    rgba: 0, 0, 0, 1  # black
+                    # Draw a rectangle for the outline
+                Line:
+                    width: 1  # Thickness of the outline
+                    rectangle: (self.x, self.y, self.width, self.height) 
+            bold: True
+            font_size: 40  # Set font size to 40 pixels
+            color: 0, 0, 0, 1  # Solid black text
+            size_hint: (0.4, 0.1)
+            pos_hint: {'center_x':0.5, 'center_y':0.62}
+            text: ''
+            input_type: 'number'  # Requests numeric keyboard
+            input_filter: 'int'
+            multiline: False       # Ensures single line input
+        
+        TextInput:
+            id: finish_number
+            write_tab:False
+            canvas.before:
+                # Set the color of the outline (RGBA values)
+                Color:
+                    rgba: 0, 0, 0, 1  # black
+                    # Draw a rectangle for the outline
+                Line:
+                    width: 1  # Thickness of the outline
+                    rectangle: (self.x, self.y, self.width, self.height) 
+            bold: True
+            font_size: 40  # Set font size to 40 pixels
+            color: 0, 0, 0, 1  # Solid black text
+            size_hint: (0.4, 0.1)
+            pos_hint: {'center_x':0.5, 'center_y':0.48}
+            text: ''
+            input_type: 'number'  # Requests numeric keyboard
+            input_filter: 'int'
+            multiline: False       # Ensures single line input
+
+        Label:
+            text: 'STARTING NUMBER (inclusive)'
+            text_size: self.size
+            #bold: True
+            halign: 'center'
+            valign: 'middle'
+            font_size: 20  # Set font size to 40 pixels
+            color: 0, 0, 0, 1  # Solid black text
+            size_hint: (0.15, 0.3)
+            pos_hint: {'center_x':0.18, 'center_y':0.62} 
+        
+        Label:
+            text: 'FINISHING NUMBER (inclusive)'
+            text_size: self.size
+            #bold: True
+            halign: 'center'
+            valign: 'middle'
+            font_size: 20  # Set font size to 40 pixels
+            color: 0, 0, 0, 1  # Solid black text
+            size_hint: (0.15, 0.3)
+            pos_hint: {'center_x':0.18, 'center_y':0.48}
+
+        RoundedBlueButton:
+            id: Start_raffle_button
+            disabled: False
+            style: "filled"
+            #bold: True
+            font_size: 20  # Set font size to 20 pixels
+            text: 'PICK WINNERS'
+            size_hint: (0.4, 0.1)
+            pos_hint: {'center_x':0.5, 'center_y':0.34}
+            on_release: 
+                root.start_raffle()
+                # root.manager.transition.direction = 'left'  # Set transition direction
+                # root.manager.current = 'main_screen'
+                # Using app.root works when ScreenManager is the root widget of your application, but not recommended.
+                # app.root.transition.direction = 'left' # Override for this specific button
+                # app.root.current = 'main_screen'
+
+        RoundedBlueButton:
+            id: reset_numbers_button
+            disabled: False
+            style: "filled"
+            #bold: True
+            font_size: 20  # Set font size to 20 pixels
+            text: 'RESET NUMBERS'
+            size_hint: (0.4, 0.1)
+            pos_hint: {'center_x':0.5, 'center_y':0.18}
+            on_release: 
+                root.reset_nums()
+
+        RoundedGreyButton:
+            id: Quit_App_button
+            style: "filled"
+            #bold: True
+            font_size: 15  # Set font size to 20 pixels
+            text: 'QUIT RAFFLE'
+            size_hint: (0.2, 0.06)
+            pos_hint: {'center_x':0.5, 'center_y':0.05}
+            on_press: app.stop()
+
+############################ THE MAIN SCREEN #######################################
+<MainScreen>:
+    canvas.before:
+        Color:
+            rgba: 0, 0, 0, 1  # Blue background for ScreenTwo
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    FloatLayout:
+    
+        RoundedBlueButton:
+            id: reset_button
+            style: "filled"
+            color: (1,1,1)
+            bold: False
+            font_size: 20  # Set font size to 20 pixels
+            text: "RESET"
+            size_hint: (0.1, 0.1)
+            pos_hint: {'center_x':0.5, 'center_y':0.9}
+            on_press: 
+                drawn_raffle_list.text = ''
+                root.clear_Raffle_array()
+                root.manager.transition.direction = 'right'  # Set transition direction
+                root.manager.current = 'intro_screen'
+
+        Label:
+            id: displayed_raffle_number
+            bold: True
+            font_size: 240  # Set font size to 240 pixels
+            color: 1, 1, 1, 1  # Solid black text
+            size_hint: (1, 1)
+            pos_hint: {'center_x':0.5, 'center_y':0.6}
+            text: '00'
+
+        RoundedBlueButton:
+            id: pick_winner_button
+            style: "filled"
+            color: (1,1,1)
+            bold: False
+            font_size: 20  # Set font size to 20 pixels
+            text: 'PICK A WINNER'
+            size_hint: (0.4, 0.1)
+            pos_hint: {'center_x':0.5, 'center_y':0.36}
+            on_press: 
+                #root.generate_and_add_number()
+                root.start_animation()
+                root.generate_and_add_number()
+                
+        Label:
+            id: drawn_raffle_list
+            bold: True
+            halign: 'center'
+            valign: 'middle'
+            text_size: self.width, None
+            #text_size: self.size
+            height: self.texture_size[1]
+            font_size: 15  # Set font size to 15 pixels
+            color: 1, 1, 1, 1  # Solid white text
+            size_hint: (0.5, None)
+            pos_hint: {'center_x':0.5, 'center_y':0.25}
+            text: ''
+
+############################ DEFINE BUTTONS HERE #######################################
+
+<RoundedBlueButton@Button>  
+    background_color: (0, 0, 1, 0) # the last zero is important
+    background_normal: ''
+    border: (0,0,0,1)
+    canvas.before:
+        Color:
+            rgba: (0, 0, 1, 1) # Solid blue
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [10]
+    
+<RoundedYellowButton@Button>  
+    background_color: (1, 1, 1, 0) # the last zero is important
+    background_normal: ''
+    canvas.before:
+        Color:
+            rgba: (1, 1, 0, 1) # Solid Yellow
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [10]
+        Color:
+            rgba: (0, 0, 0, 1)  # black color for line border
+        Line:
+            rounded_rectangle: (self.pos[0], self.pos[1], self.size[0], self.size[1], 10)
+            width: 1.5
+
+<RoundedGreyButton@Button>  
+    background_color: (0, 0, 1, 0) # the last zero is important
+    background_normal: ''
+    canvas.before:
+        Color:
+            rgba: (0.5, 0.5, 0.5, 1) # Grey
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [10]
+
+#:import Factory kivy.factory.Factory
+
+<NumberEntryError@Popup>:
+    # Popup settings
+    #bold: True
+    #title: 'CHECK YOUR NUMBERS'
+    #title_align: 'center'
+    #title_color: 0, 0, 0, 1
+    #title_font: './font_file.ttf'
+    #title_size: sp(25)
+    #title_bold: True
+
+    #separator_color: 180/255, 164/255, 176/255, 1
+    #separator_height: dp(4)
+
+    #auto_dismiss: False
+
+    size_hint: 0.8, 0.3
+    background: ''
+    #background_color: 228/255, 216/255, 225/255, 1
+    background_color: 1, 1, 1, 1
+    
+    #  Content Area Settings
+    BoxLayout:
+        orientation: 'vertical'
+        canvas.before:
+            Color:
+                #rgba: 207/255, 190/255, 202/255, 1
+                rgba: 0, 0, 0, 1
+            Rectangle:
+                size: self.size
+                pos: self.pos
+
+        Label: 
+            bold: True
+            text: 'Numbers must be positive and FINISHING number greater than STARTING number.'
+            color: 1, 1, 1, 1
+        
+        Button:
+            text: 'Close'
+            background_color: 0, 0, 1, 1
+            on_release: root.dismiss()
+
+<RaffleFull@Popup>:
+    # Popup settings
+    #bold: True
+    #title: 'CHECK YOUR NUMBERS'
+    #title_align: 'center'
+    #title_color: 0, 0, 0, 1
+    #title_font: './font_file.ttf'
+    #title_size: sp(25)
+    #title_bold: True
+
+    #separator_color: 180/255, 164/255, 176/255, 1
+    #separator_height: dp(4)
+
+    #auto_dismiss: False
+
+    size_hint: 0.5, 0.3
+    background: ''
+    #background_color: 228/255, 216/255, 225/255, 1
+    background_color: 1, 1, 1, 1
+    
+    #  Content Area Settings
+    BoxLayout:
+        orientation: 'vertical'
+        canvas.before:
+            Color:
+                #rgba: 207/255, 190/255, 202/255, 1
+                rgba: 0, 0, 0, 1
+            Rectangle:
+                size: self.size
+                pos: self.pos
+
+        Label: 
+            bold: True
+            text: 'NO more RAFFLE Numbers available.'
+            color: 1, 1, 1, 1
+        
+        Button:
+            text: 'Close'
+            background_color: 0, 0, 1, 1
+            on_release: root.dismiss()
+
+############################ SPECIFIC BUTTON LOGIC #######################################
+<BtnTextInput>:
+
+    # To position widgetsin the proper orientation  
+    # use of vertical orientation to set all widgets 
+    orientation: "vertical"
+
+    # Using the Box layout
+    #BoxLayout:
+    #    height: "50dp"
+    #    size_hint_y: None
+
+    FloatLayout:
+        size_hint: (0.2, 0.06)
+        pos_hint: {'center_x':0.5, 'center_y':0.4}
+
+        # Creating Test input
+        TextInput:
+            size_hint_x: 20
+
+        # Creating Button 
+        Button:
+            text: "Apply"
+            size_hint_x: 25
+            background_color: 0, 0, 1, 1
+            font_size: 35
