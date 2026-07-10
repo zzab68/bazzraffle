@@ -16,6 +16,6 @@ Most research I discovered was to do with buildozer issues compiling kivy applic
 which seems to be in it's infancy, and rather hit and miss. 
 ## Future solutions:
 > I may have to ditch buildozer and kivy altogether and go with another
-Android Packager such as beeware.
-B Smalldon - March 2026.
+> Android Packager such as beeware.
+> B Smalldon - March 2026.
 ##########################################################################
