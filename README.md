@@ -12,8 +12,8 @@
 > but as of December 2025 I was unable to build the script \
 > and package it to an Android Package using the buildozer application. \
 > More work needs to be done WRT buildozer compilation to Android Application. \
-> Most research I discovered was to do with buildozer issues compiling kivy applications, 
-which seems to be in it's infancy, and rather hit and miss. 
+> Most research I discovered was to do with buildozer issues compiling kivy applications, \
+> which seems to be in it's infancy, and rather hit and miss. 
 ### Future solutions:
 > I may have to ditch buildozer and kivy altogether and go with another \
 > Android Packager such as beeware. \
