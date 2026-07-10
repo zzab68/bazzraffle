@@ -15,7 +15,7 @@ More work needs to be done WRT buildozer compilation to Android Application.
 Most research I discovered was to do with buildozer issues compiling kivy applications, 
 which seems to be in it's infancy, and rather hit and miss. 
 ## Future solutions:
-> I may have to ditch buildozer and kivy altogether and go with another
-> Android Packager such as beeware.
+> I may have to ditch buildozer and kivy altogether and go with another \
+> Android Packager such as beeware. \
 > B Smalldon - March 2026.
 ##########################################################################
