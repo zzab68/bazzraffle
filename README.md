@@ -2,10 +2,10 @@
 ### Barry Smalldon's raffle number program in Python September - November 2025
 #### Created for my local bowls club's raffle in 2025.
 
-This program works on both Windows and Linux Operating Systems \
-and is coded in Python using the kivy GUI environment,  \
-definitions of all buttons, screens, pop-ups and text
-are kept in the components.kv file
+> This program works on both Windows and Linux Operating Systems \
+> and is coded in Python using the kivy GUI environment,  \
+> .definitions of all buttons, screens, pop-ups and text
+> are kept in the components.kv file
 This program has been tested and works successfully on both 
 Windows and Linux systems.
 This program is intended to be an Android Application,
