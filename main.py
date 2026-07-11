@@ -17,6 +17,7 @@ from kivy.core.window import Window
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.textinput import TextInput
 from kivy.clock import Clock
+from kivy.properties import NumericProperty
 from functools import partial
 
 # Global variables in Python, similar to public/private static final.
@@ -29,24 +30,26 @@ Builder.load_file('components.kv')
 
 # screens
 class IntroScreen(Screen):
+    start_test = NumericProperty(57)
     start_raffle_number = 0
     finish_raffle_number = 0
     max_numbers = 0
     finish_number_length = 0
     def start_raffle(self, *args):
         # First up, perform all error checking on the Raffle numbers before progressing.
-        # Start abd Finish Raffle numbers must be greater than 1 and finish_raffle_number > start_raffle_number.
+        # Start and Finish Raffle numbers must be greater than 1 and finish_raffle_number > start_raffle_number.
         if not self.ids.start_number.text:
             #print(" ERROR = start_number Text box is empty.")
             Factory.NumberEntryError().open()
             return
         else:
-            #print(" start_number Text box contains content.")
+            #print("start_number Text box contains content.")
             IntroScreen.start_raffle_number = int(self.ids.start_number.text)
             if IntroScreen.start_raffle_number <1:
                 #print("ERROR = start_number is less than 1.")
                 Factory.NumberEntryError().open()
-                return  # This exits the my_kivy_method function
+                # This exits the my_kivy_method function
+                return  
         if not self.ids.finish_number.text:
             #print(" ERROR = finish_raffle_number Text box is empty.")
             Factory.NumberEntryError().open()
@@ -57,17 +60,23 @@ class IntroScreen(Screen):
             if IntroScreen.finish_raffle_number <1:
                 #print("ERROR = finish_integer is less than 1.")
                 Factory.NumberEntryError().open()
-                return  # This exits the my_kivy_method function
+                # This exits the my_kivy_method function
+                return 
         if IntroScreen.start_raffle_number >= IntroScreen.finish_raffle_number :
             #print("ERROR = FINISHING NUMBER must be greater than STARTING NUMBER.")
             Factory.NumberEntryError().open()
-            return  # This exits the my_kivy_method function
+            # This exits the my_kivy_method function
+            return  
         else:
             # The max_number must include start and finish number.
             IntroScreen.max_numbers = IntroScreen.finish_raffle_number  - IntroScreen.start_raffle_number + 1
             # This sets big number display digit length equal to finish numbers digit length.
             IntroScreen.finish_number_length = int(math.log10(IntroScreen.finish_raffle_number)) + 1
+            # Pass the start and finish values directly to the second screen 
+            self.manager.get_screen('main_screen').start_value = IntroScreen.start_raffle_number
+            self.manager.get_screen('main_screen').finish_value = IntroScreen.finish_raffle_number
             """
+            FAULT FINDING: The following print statements are for debugging purposes to verify that the values are being passed correctly.
             print(f'STARTING NUMBER is {IntroScreen.start_raffle_number}') 
             print(f'FINISHING NUMBER is {IntroScreen.finish_raffle_number}') 
             print(f'MAX RAFFLE NUMBERS is {IntroScreen.max_numbers}') 
@@ -77,17 +86,21 @@ class IntroScreen(Screen):
             # The next line sets the big RAFFLE number to zeros with digit length equal to finish numbers digit length.
             self.manager.get_screen('main_screen').ids.displayed_raffle_number.text =  f"{formatted_number}"
             self.manager.get_screen('main_screen').ids.pick_winner_button.disabled = False
+            # Switch to the second screen with a slide transition to the left. The kv file can't do logic for transitions, so we handle it here.
             self.manager.transition = SlideTransition(direction='left')
-            self.manager.current = 'main_screen' # change screens here due to logic; the kv file can't do logic for transitions.
+            self.manager.current = 'main_screen' 
 
     def reset_nums(self):
         self.ids.start_number.text = ''
         self.ids.finish_number.text = ''
 
 class MainScreen(Screen):
-    # Initialize an empty list to store raffle numbers
+    # Initialize an empty list to store randomly drawn raffle numbers
     unique_raffle_numbers = []  
-    unique_raffle_numbers.clear()  
+    unique_raffle_numbers.clear() 
+    # These two properties are used to pass the start and finish values from the IntroScreen to the MainScreen. 
+    start_value = NumericProperty(0)
+    finish_value = NumericProperty(0)
     count = 0
         
     # This method updates the BIG SHUFFLED RANDOM number Label displayed_raffle_number.
@@ -111,9 +124,9 @@ class MainScreen(Screen):
         self.event = Clock.schedule_interval(self.animate_text, SHUFFLE_ANIMATION_GAP)
         # Schedule the stop event after the shuffle duration. 
         #Clock.schedule_once(self.stop_animation, SHUFFLE_DURATION_TIME)   
-        
+
+    # This method is called at each interval 'SHUFFLE_ANIMATION_GAP' to update the displayed raffle number with a new random number.
     def animate_text(self, dt):
-        """Called every 0.1 seconds to add a new character."""
         self.count += 1
         fake_random_number = str(random.randint(IntroScreen.start_raffle_number, IntroScreen.finish_raffle_number))
         formatted_fake_number = str(fake_random_number).zfill(IntroScreen.finish_number_length)
@@ -127,8 +140,8 @@ class MainScreen(Screen):
                 self.update_main_raffle_number()
                 #self.update_raffle_list_display()
                 self.ids.pick_winner_button.disabled = False
-                self.event.cancel() # Stop the interval
-                #self.stop_animation(dt) # Stop the interval
+                # Stop the interval
+                self.event.cancel() 
         else:
             #self.count = 0
             self.update_main_raffle_number()
@@ -136,7 +149,8 @@ class MainScreen(Screen):
             self.ids.pick_winner_button.disabled = False
             #print(f"IntroScreen.max_numbers Maximum Number = {IntroScreen.max_numbers} in animate_text.")
             #Factory.RaffleFull().open()
-            self.event.cancel() # Stop the interval
+            # Stop the interval
+            self.event.cancel() 
 
     # Generate a new random unique raffle number and add it to the unique_raffle_numbers list. 
     def generate_and_add_number(self):
@@ -147,7 +161,8 @@ class MainScreen(Screen):
                 #print(f"Random Number generated = {self.new_random_number} ")
                 if self.new_random_number not in self.unique_raffle_numbers:
                     self.unique_raffle_numbers.append(self.new_random_number)
-                    break  # Exit the loop once a unique raffle number is found and added
+                    # Exit the loop once a unique raffle number is found and added
+                    break  
         else:
             #print(f"Maximum Number of {IntroScreen.max_numbers} in generate_and_add_number.")
             # If we have exhausted all possible raffle numbers in the range, disply Popup and Disable PICK A WINNER button.
@@ -159,6 +174,7 @@ class MyScreenManager(ScreenManager):
 
 class bazzRaffle(App):
     def build(self):
+        # Create an instance of the ScreenManager and add the screens to it.
         sm = MyScreenManager()
         Window.clearcolor = (1, 1, 1, 1) 
         sm.add_widget(IntroScreen(name='intro'))

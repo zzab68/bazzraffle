@@ -187,6 +187,15 @@
             pos_hint: {'center_x':0.5, 'center_y':0.25}
             text: ''
 
+        Label:
+            id: raffle_draw_descriptor
+            bold: True
+            font_size: 15  # Set font size to 240 pixels
+            color: 1, 1, 1, 1  # Solid black text
+            size_hint: (1, 1)
+            pos_hint: {'center_x':0.5, 'center_y':0.02}
+            text: f"Draw numbers between {root.start_value} and {root.finish_value} inclusive"
+
 ############################ DEFINE BUTTONS HERE #######################################
 
 <RoundedBlueButton@Button>  
@@ -263,7 +272,7 @@
 
         Label: 
             bold: True
-            text: 'Numbers must be positive and FINISHING number greater than STARTING number.'
+            text: 'ERROR: Numbers must be positive and FINISHING number greater than STARTING number.'
             color: 1, 1, 1, 1
         
         Button:
