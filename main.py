@@ -22,15 +22,16 @@ from functools import partial
 
 # Global variables in Python, similar to public/private static final.
 # SHUFFLE_DURATION_COUNTER x SHUFFLE_ANIMATION_GAP = Total Shuffle Time, in Seconds.
-SHUFFLE_ANIMATION_GAP =  0.1 # how long between the number shuffled on screen, in Seconds.
-SHUFFLE_DURATION_COUNTER = 20 # How many times the shuffle occurs.
+# how long between the number shuffled on screen, in Seconds.
+SHUFFLE_ANIMATION_GAP =  0.1 
+# How many times the shuffle occurs.
+SHUFFLE_DURATION_COUNTER = 20 
 
 # Load the KV file
 Builder.load_file('components.kv')
 
 # screens
 class IntroScreen(Screen):
-    start_test = NumericProperty(57)
     start_raffle_number = 0
     finish_raffle_number = 0
     max_numbers = 0
@@ -68,8 +69,8 @@ class IntroScreen(Screen):
             # This exits the my_kivy_method function
             return  
         else:
-            # The max_number must include start and finish number.
-            IntroScreen.max_numbers = IntroScreen.finish_raffle_number  - IntroScreen.start_raffle_number + 1
+            # The max_numbers must include start and finish number.
+            IntroScreen.max_numbers = IntroScreen.finish_raffle_number - IntroScreen.start_raffle_number + 1
             # This sets big number display digit length equal to finish numbers digit length.
             IntroScreen.finish_number_length = int(math.log10(IntroScreen.finish_raffle_number)) + 1
             # Pass the start and finish values directly to the second screen 
